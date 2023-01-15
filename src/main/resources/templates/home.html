@@ -1,161 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-    <style>
-        body
-        {
-            font-size: 12px !important;
-        }
-
-        #tool-bar
-        {
-            padding: 10px;
-        }
-    </style>
-
-
-</head>
-<script src="/js/bootstrap.bundle.js"></script>
-<script src="/js/bootstrap.js"></script>
-<link href="/css/bootstrap.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="/css/AXJ.min.css">
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/AXJ.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha512-uto9mlQzrs59VwILcLiRYeLKPPbS/bT71da/OEBYEwcdNUk8jYIy+D176RYoop1Da+f9mvkYrmj5MCLZWEtQuA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script type="text/javascript">
-    var myGrid = new AXGrid(); // instance
-    var fnObj = {
-        pageStart: function(){
-            myGrid.setConfig({
-                targetID : "AXGridTarget",
-                theme : "AXGrid",
-                autoChangeGridView: { // autoChangeGridView by browser width
-                    mobile:[0,600], grid:[600]
-                },
-                colGroup : [
-                    {key:"no", label:"No.", width:"40", align:"center", formatter:"money"},
-                    {key:"title", label:"Title", width:"200"},
-                    {key:"writer", label:"Writer", width:"100", align:"center"},
-                    {key:"date", label:"Date.", width:"100", align:"center"},
-                    {key:"desc", label:"Etc.", width:"*"}
-                ],
-                body : {
-                    onclick: function(){
-                        toast.push(Object.toJSON({index:this.index, item:this.item}));
-                    }
-                },
-                page:{
-                    paging:false
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>The Big Picture - Start Bootstrap Template</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="/css/styles.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-3.6.3.slim.js" integrity="sha256-DKU1CmJ8kBuEwumaLuh9Tl/6ZB6jzGOBV/5YpNE2BWc=" crossorigin="anonymous"></script>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="/js/scripts.js"></script>
+        <script>
+            const tab_list = ["main_screen", "register_screen"];
+            $(function() {
+                resizeLayout();
+                window.onresize = function() {
+                    resizeLayout();
                 }
             });
-
-            var list = [
-                {
-                    no:1, title:"AXGrid 첫번째 줄 입니다.AXGrid 첫번째 줄 입니다.", writer:"장기영", img:"img/1.jpg", desc:"많은 글을 담고 있는 내용 입니다. 자연스럽게 줄이 넘어가고 표현되는 것이 관건 입니다.", category:"액시스제이", date:"2014-04-05"
-                },
-                {
-                    no:2, title:"AXGrid 두번째 줄 입니다.AXGrid 첫번째 줄 입니다.", writer:"장기영", img:"img/2.jpg", desc:"많은 글을 담고 있는 내용 입니다.", category:"액시스제이", date:"2014-04-07"
-                },
-                {
-                    no:3, title:"AXGrid 세번째 줄 입니다.AXGrid 첫번째 줄 입니다.", writer:"장기영", img:"img/3.jpg", desc:"많은 글을 담고 있는 내용 입니다. 자연스럽게...", category:"액시스제이", date:"2014-04-09"
-                }
-            ];
-
-            //setList
-            myGrid.setList(list);
-            /* ajax way
-            myGrid.setList({
-                ajaxUrl:"...",
-                ajaxPars:"",
-                onLoad:function(){},
-                onError:function(){}
-            });
-            */
-        }
-    };
-    jQuery(document).ready(fnObj.pageStart.delay(0.1));
-    $(function () {
-        $.datepicker.setDefaults({
-            dateFormat: 'yy-mm-dd' //Input Display Format 변경
-            ,showOtherMonths: true //빈 공간에 현재월의 앞뒤월의 날짜를 표시
-            ,showMonthAfterYear:true //년도 먼저 나오고, 뒤에 월 표시
-            ,changeYear: true //콤보박스에서 년 선택 가능
-            ,changeMonth: true //콤보박스에서 월 선택 가능
-            ,buttonText: "선택" //버튼에 마우스 갖다 댔을 때 표시되는 텍스트
-            ,yearSuffix: "년" //달력의 년도 부분 뒤에 붙는 텍스트
-            ,monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'] //달력의 월 부분 텍스트
-            ,monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'] //달력의 월 부분 Tooltip 텍스트
-            ,dayNamesMin: ['일','월','화','수','목','금','토'] //달력의 요일 부분 텍스트
-            ,dayNames: ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'] //달력의 요일 부분 Tooltip 텍스트
-            ,minDate: "-1M" //최소 선택일자(-1D:하루전, -1M:한달전, -1Y:일년전)
-            ,maxDate: "+1M" //최대 선택일자(+1D:하루후, -1M:한달후, -1Y:일년후)
-            ,beforeShow: function() {
-                setTimeout(function(){
-                    $('.ui-datepicker').css('z-index', 99999999999999);
-                }, 0);
+            function resizeLayout() {
+                const window_height = $(window).outerHeight();
+                tab_list.forEach((tab)=> {
+                    $("#" + tab).outerHeight(window_height);
+                });
             }
-        });
-        resizeLayout();
-        $(".datepicker").datepicker();
-    })
 
+            function tabMove(tabName) {
+                tab_list.forEach((tab)=> {
+                    $("#" + tab).hide();
+                });
 
-    function resizeLayout()
-    {
-        const window_height = $(window).outerHeight();
-        const tool_bar_height = 50;
-        const content_height = window_height - tool_bar_height;
-        $("#body").outerHeight(window_height);
-        $("#tool-bar").outerHeight(tool_bar_height);
-        $("#content").outerHeight(content_height);
-    }
-</script>
-<body id="body">
-<div id="tab-bar">
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-<!--            <a class="nav-link active" aria-current="page" href="#">Active</a>-->
-            <a class="nav-link active" href="#">가게부현황</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">대시보드</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">계정과목관리</a>
-        </li>
-        <li class="nav-item">
-<!--            <a class="nav-link disabled">Disabled</a>-->
-        </li>
-    </ul>
-</div>
-<div id="tool-bar">
-    <select aria-label="Default select example" style="height: 24px;">
-        <option value="1" selected>발생일</option>
-        <option value="2">작성일</option>
-    </select>
-    <label for="startDate">
-        시작일
-        <input type="text" id="startDate" class="datepicker" />
-    </label>
-    <label for="endDate">
-        종료일
-        <input type="text" id="endDate" class="datepicker" />
-    </label>
+                $("#"+tabName).show();
 
-    <select aria-label="Default select example" style="height: 24px; margin-left: 57px;">
-        <option value="1" selected>적요</option>
-        <option value="2">계정과목</option>
-    </select>
-    <input type="text" id="search_txt"/>
-</div>
-<div id="content">
-    <div id="AXGridTarget"></div>
-</div>
-</body>
+                resizeLayout();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="main_screen">
+
+        </div>
+        <div id="register_screen"  style="display: none">
+            <div>
+                <div class="card">
+                    <div class="card-header bme">
+                        데이터입력
+                    </div>
+                    <div class="card-body">
+                        <div class="bd-example">
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label bme">거래일</label>
+                                <input type="date" class="form-control bme" id="startDate" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label bme">계정과목</label>
+                                <select  class="form-control" id="exampleFormControlInput1">
+                                    <option class="bme">간식비</option>
+                                    <option class="bme">교통비</option>
+                                    <option class="bme">식대</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlInput1"  class="form-label bme">금액</label>
+                                <input  class="form-control bme">
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label bme">적요</label>
+                                <textarea class="form-control bme" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary bme" style="width: 120px; float: right;" type="submit">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand bme" href="#!" onclick="tabMove('main_screen')">가게부 v01</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active"><a class="nav-link bme" href="#!" onclick="tabMove('register_screen')">등록</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </body>
 </html>

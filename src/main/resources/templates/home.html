@@ -15,6 +15,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="/js/scripts.js"></script>
+        <script src="/js/InputUtils.js"></script>
+        <script src="/js/ServerSide.js"></script>
         <script>
             const tab_list = ["main_screen", "register_screen"];
             $(function() {
@@ -36,8 +38,55 @@
                 });
 
                 $("#"+tabName).show();
-
+                switch (tabName) {
+                    case "main_screen":
+                        break;
+                    case "register_screen":
+                        registerScreenInit();
+                        break;
+                }
                 resizeLayout();
+            }
+
+            function registerScreenInit() {
+                let date = new Date();
+                const year = date.getFullYear();
+                let month = '0' + date.getMonth()+1;
+                if (month.length > 2)
+                    month = month.substring(1);
+                let day = '0' + date.getDate();
+                if (day.length > 2)
+                    day = day.substring(1);
+                $("#transaction_ok_date").val(year + '-' + month + '-' + day);
+            }
+
+            async function registerSave() {
+                var obj = {};
+                for (let i = 0; i < $(".form-control").length; i++) {
+                    const id = $(".form-control")[i].id;
+                    obj[id] = $("#" + id).val();
+                    if (id === "amount") {
+                        obj[id] = $("#" + id).val().replaceAll(",", "").trim();
+                    }
+                }
+                const response = await post("../register/registerSave",obj);
+
+                if (!response.result) {
+                    alert("전표 등록에 실패 하였습니다");
+                } else {
+                    alert("전표를 등록하였습니다");
+                    registerInit();
+                }
+            }
+
+            function registerInit() {
+                for (let i = 0; i < $(".form-control").length; i++) {
+                    const id = $(".form-control")[i].id;
+                    if (id === "transaction_ok_date" || id === "item_id") {
+                        continue;
+                    }
+                    $("#" + id).val("");
+                }
             }
         </script>
     </head>
@@ -45,8 +94,8 @@
         <div id="main_screen">
 
         </div>
-        <div id="register_screen"  style="display: none">
-            <div>
+        <div id="register_screen"  style="display: none; background: #dbdbdb">
+            <div class="container">
                 <div class="card">
                     <div class="card-header bme">
                         데이터입력
@@ -54,29 +103,29 @@
                     <div class="card-body">
                         <div class="bd-example">
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label bme">거래일</label>
-                                <input type="date" class="form-control bme" id="startDate" />
+                                <label for="transaction_ok_date" class="form-label bme">거래일</label>
+                                <input type="date" class="form-control bme" id="transaction_ok_date" />
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label bme">계정과목</label>
-                                <select  class="form-control" id="exampleFormControlInput1">
-                                    <option class="bme">간식비</option>
-                                    <option class="bme">교통비</option>
-                                    <option class="bme">식대</option>
+                                <label for="item_id" class="form-label bme">계정과목</label>
+                                <select  class="form-control bme" id="item_id">
+                                    <option class="bme" value="snacks_fee">간식비</option>
+                                    <option class="bme" value="tr_fee">교통비</option>
+                                    <option class="bme" value="eat_fee">식대</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1"  class="form-label bme">금액</label>
-                                <input  class="form-control bme">
+                                <label for="amount"  class="form-label bme">금액</label>
+                                <input  class="form-control bme" id="amount" onkeyup="inputNumberFormat(this)">
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="form-label bme">적요</label>
-                                <textarea class="form-control bme" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <label for="comment" class="form-label bme">적요</label>
+                                <textarea class="form-control bme" id="comment" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary bme" style="width: 120px; float: right;" type="submit">저장</button>
+                        <button class="btn btn-primary bme" style="width: 120px; float: right;" type="submit" onclick="registerSave()">저장</button>
                     </div>
                 </div>
             </div>

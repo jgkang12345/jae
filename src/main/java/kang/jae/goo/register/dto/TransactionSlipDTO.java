@@ -18,4 +18,10 @@ public class TransactionSlipDTO {
     @JsonProperty("comment")
     private String comment;
 
+    @JsonProperty("item_id")
+    private String itemId;
+
+    private String regDt;
+    private String regId;
+
 }

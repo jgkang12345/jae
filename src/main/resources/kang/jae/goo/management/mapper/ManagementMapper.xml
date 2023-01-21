@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kang.jae.goo.management.mapper.ManagementMapper">
+
+    <select id="doSearch" parameterType="hashmap" resultType="hashmap">
+        select
+            seq as seq
+            ,item_id as itemId
+            ,amount as amount
+            ,DATE_FORMAT(transaction_ok_date, '%Y-%m-%d') as transactionOkDate
+            ,comment as comment
+            ,DATE_FORMAT(reg_dt, '%Y-%m-%d') as regDt
+            ,reg_id as regId
+        from D_TRANSACTION_SLIP
+            where
+                1=1
+                and transaction_ok_date between #{m_start_dt} and #{m_end_dt}
+                <if test='m_search_gb eq "A"'>
+                    and comment like '%${m_search_txt}%'
+                </if>
+    </select>
+
+    <delete id="deleteItem" parameterType="hashmap">
+        delete from d_transaction_slip where seq = #{seq}
+    </delete>
+
+    <update id="updateItem" parameterType="hashmap">
+        update d_transaction_slip set
+            amount = #{amount}
+            ,comment = #{comment}
+            ,item_id = #{item_id}
+            where
+                seq = #{seq}
+    </update>
+</mapper>

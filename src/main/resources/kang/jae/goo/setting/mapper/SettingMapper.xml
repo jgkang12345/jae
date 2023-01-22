@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kang.jae.goo.setting.mapper.SettingMapper">
+
+    <insert id="InsertItem" parameterType="hashmap">
+        INSERT INTO b_variation_items
+            (
+             user_id
+             ,trade_cd
+             , title
+             , item_id
+             , order_sq
+             , reg_dt
+             , reg_id
+             )
+        VALUES
+            (
+             #{user_id}
+             , #{trade_cd}
+             , #{title}
+             , #{item_id}
+             , 0
+             , now()
+             ,#{user_id}
+            )
+    </insert>
+
+    <update id="UpdateItem" parameterType="hashmap">
+        update  b_variation_items set
+            title = #{title}
+            ,trade_cd = #{trade_cd}
+        where seq = #{seq}
+    </update>
+
+    <select id="SelectDno" parameterType="hashmap" resultType="int">
+        set @dno = (select (item_no+1) from d_no where user_id = #{user_id});
+        update d_no set
+            item_no = @dno
+            where user_id = #{user_id};
+        select @dno as item_no;
+    </select>
+
+    <select id="doSearch" parameterType="hashmap" resultType="hashmap">
+        select
+            seq as seq
+            ,user_id as user_id
+            ,trade_cd as trade_cd
+            ,title as title
+            ,item_id as item_id
+            ,DATE_FORMAT(reg_dt, '%Y-%m-%d') as reg_dt
+            , 'N' as fix_gb
+        from b_variation_items
+            where
+                1=1
+                <if test='s_search_gb eq "A"'>
+                    and trade_cd = #{s_search_gb}
+                </if>
+                <if test='s_search_gb eq "B"'>
+                    and trade_cd = #{s_search_gb}
+                </if>
+                <if test='s_search_txt neq ""'>
+                    and title = #{s_search_txt}
+                </if>
+        union all
+        select
+            seq as seq
+            ,'' as user_id
+            ,trade_cd as trade_cd
+            ,title as title
+            ,item_id as item_id
+            ,'' as reg_dt
+            ,'Y' as fix_gb
+        from b_fixed_items
+            where
+                1=1
+                <if test='s_search_gb eq "A"'>
+                    and trade_cd = #{s_search_gb}
+                </if>
+                <if test='s_search_gb eq "B"'>
+                    and trade_cd = #{s_search_gb}
+                </if>
+                <if test='s_search_txt neq ""'>
+                    and title = #{s_search_txt}
+                </if>
+    </select>
+
+    <delete id="doDelete" parameterType="hashmap">
+        delete from b_variation_items where seq = #{seq}
+    </delete>
+</mapper>

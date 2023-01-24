@@ -20,6 +20,8 @@ function managementScreenInit() {
         day = day.substring(1);
 
     $("#m_start_dt").val(year + '-' + month + '-' + day);
+    mg_getItem();
+    m_doSearch();
 }
 let mg_main_list = [];
 async function m_doSearch()
@@ -46,9 +48,9 @@ async function m_doSearch()
 function make_table(list) {
     var table = "";
     list.forEach((item) => {
-        table += `<tr>
+        table += `<tr class="${tradeCdRender(item.trade_cd)}">
                     <td>${item.transactionOkDate}</td>
-                    <td>${item.itemId}</td>
+                    <td>${item.title}</td>
                     <td>${comma(uncomma(item.amount))}</td>
                     <td><button class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#mg_modal" onclick="mg_modal_init(${item.seq})" >상세</button></td>
                     </tr>`
@@ -59,7 +61,6 @@ function mg_modal_reset() {
     $("#mg_modal_seq").val("");
     $("#mg_modal_tr_date").val("");
     $("#mg_modal_reg_date").val("");
-    $("#mg_modal_item_id").val("");
     $("#mg_modal_amount").val("");
     $("#mg_modal_comment").val("");
 }
@@ -83,7 +84,6 @@ function mg_modal_init(seq) {
         alert(e);
     }
 }
-
 async function mg_delete () {
     const seq = Number($("#mg_modal_seq").val());
     const ok = confirm("정말로 삭제하시겠습니까?");
@@ -123,4 +123,39 @@ async function mg_update() {
         await m_doSearch();
         $("#mg_close").click();
     }
+}
+
+async function mg_getItem() {
+    const response = await selectItemSetting();
+    if (response.result) {
+        let str = "";
+        response.data.forEach((item) => {
+            str += `<option value="${item.item_id}">${item.title}</option>`
+        });
+        $("#mg_modal_item_id").empty();
+        $("#mg_modal_item_id").append(str);
+    }
+}
+
+async function mg_excelDownload() {
+    const obj = {};
+    obj.list = mg_main_list
+
+    const response = await fetch("../management/mg_excelDownload", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(obj),
+    });
+
+    const myblob = await response.blob();
+
+    var a = document.createElement("a");
+    var url = URL.createObjectURL(myblob);
+    a.href = url;
+    a.download = "전표관리.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
 }

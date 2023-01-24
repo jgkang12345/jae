@@ -26,7 +26,7 @@ async function s_doSearch() {
 function s_make_table(list) {
     var table = "";
     list.forEach((item) => {
-        table += `<tr>
+        table += `<tr class="${tradeCdRender(item.trade_cd)}">
                     <td>${item.title}</td>
                     <td>${tradeGbRender(item.trade_cd)}</td>
                     <td>${fixGbRender(item.fix_gb)}</td>

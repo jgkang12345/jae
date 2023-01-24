@@ -52,6 +52,7 @@
         from b_variation_items
             where
                 1=1
+                and user_id = #{user_id}
                 <if test='s_search_gb eq "A"'>
                     and trade_cd = #{s_search_gb}
                 </if>

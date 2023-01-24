@@ -3,18 +3,41 @@
 <mapper namespace="kang.jae.goo.management.mapper.ManagementMapper">
 
     <select id="doSearch" parameterType="hashmap" resultType="hashmap">
+
+        with item as
+        (
+            select
+                seq as seq
+                ,trade_cd as trade_cd
+                ,title as title
+                ,item_id as item_id
+            from b_variation_items
+                where
+                    1=1
+                    and user_id = #{user_id}
+            union all
+            select
+                seq as seq
+                ,trade_cd as trade_cd
+                ,title as title
+                ,item_id as item_id
+            from b_fixed_items
+        )
         select
-            seq as seq
-            ,item_id as itemId
-            ,amount as amount
-            ,DATE_FORMAT(transaction_ok_date, '%Y-%m-%d') as transactionOkDate
-            ,comment as comment
-            ,DATE_FORMAT(reg_dt, '%Y-%m-%d') as regDt
-            ,reg_id as regId
-        from D_TRANSACTION_SLIP
+             slip.seq as seq
+            ,slip.item_id as itemId
+            ,slip.title as title
+            ,slip.amount as amount
+            ,DATE_FORMAT(slip.transaction_ok_date, '%Y-%m-%d') as transactionOkDate
+            ,slip.comment as comment
+            ,DATE_FORMAT(slip.reg_dt, '%Y-%m-%d') as regDt
+            ,slip.reg_id as regId
+            ,sub.trade_cd as trade_cd
+        from D_TRANSACTION_SLIP slip left outer join item sub on slip.item_id = sub.item_id
             where
                 1=1
                 and transaction_ok_date between #{m_start_dt} and #{m_end_dt}
+                and user_id = #{user_id}
                 <if test='m_search_gb eq "A"'>
                     and comment like '%${m_search_txt}%'
                 </if>
@@ -29,7 +52,29 @@
             amount = #{amount}
             ,comment = #{comment}
             ,item_id = #{item_id}
+            ,mod_dt = now()
+            ,mod_id = #{user_id}
             where
                 seq = #{seq}
     </update>
+
+    <select id="selectItemSetting" parameterType="hashmap" resultType="hashmap">
+        select
+            seq as seq
+            ,trade_cd as trade_cd
+            ,title as title
+            ,item_id as item_id
+        from b_variation_items
+            where
+            1=1
+                and user_id = #{user_id}
+        union all
+        select
+            seq as seq
+            ,trade_cd as trade_cd
+            ,title as title
+            ,item_id as item_id
+        from b_fixed_items
+    </select>
+
 </mapper>

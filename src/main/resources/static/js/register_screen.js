@@ -8,6 +8,8 @@ function registerScreenInit() {
     if (day.length > 2)
         day = day.substring(1);
     $("#transaction_ok_date").val(year + '-' + month + '-' + day);
+    getItem();
+
 }
 async function registerSave() {
     var obj = {};
@@ -18,6 +20,11 @@ async function registerSave() {
             obj[id] = $("#" + id).val().replaceAll(",", "").trim();
         }
     }
+    if ($("#amount").val().trim() === "") {
+        alert("금액은 필수 입력값입니다");
+        return;
+    }
+    obj.title = $("#item_id option:checked").text();
     const response = await post("../register/registerSave",obj);
 
     if (!response.result) {
@@ -28,11 +35,23 @@ async function registerSave() {
     }
 }
 function registerInit() {
-    for (let i = 0; i < $(".form-control").length; i++) {
+    for (let i = 0; i < $(".reg.form-control").length; i++) {
         const id = $(".form-control")[i].id;
         if (id === "transaction_ok_date" || id === "item_id") {
             continue;
         }
         $("#" + id).val("");
+    }
+}
+
+async function getItem() {
+    const response = await selectItemSetting();
+    if (response.result) {
+        let str = "";
+        response.data.forEach((item) => {
+            str += `<option value="${item.item_id}">${item.title}</option>`
+        });
+        $("#item_id").empty();
+        $("#item_id").append(str);
     }
 }

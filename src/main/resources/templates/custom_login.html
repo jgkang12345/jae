@@ -14,7 +14,6 @@
   <!-- Bootstrap core JS-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <link href="/css/styles.css" rel="stylesheet" />
-  <script src="/js/ServerSide.js"></script>
   <style>
     .login-form {
       width: 340px;
@@ -41,11 +40,11 @@
   </style>
 </head>
 <body>
-<div class="login-form bme">
+<div class="login-form">
   <form action="../login" method="post">
-    <h2 class="text-center">Log in</h2>
+    <h2 class="text-center bme">Log in</h2>
     <div class="form-group">
-      <input type="text" class="form-control" name="username" placeholder="Username" required="required">
+      <input type="text" class="form-control bme" name="username" placeholder="Username" required="required">
     </div>
     <div class="form-group">
       <input type="password" class="form-control" name="password" placeholder="Password" required="required">
@@ -54,26 +53,30 @@
       <button type="submit" class="btn btn-primary btn-block">Log in</button>
     </div>
   </form>
-  <p class="text-center" data-bs-toggle="modal" data-bs-target="#mg_modal"><a href="#">Create an Account</a></p>
+  <p class="text-center" data-bs-toggle="modal" data-bs-target="#mg_modal"><a href="#">회원가입</a></p>
 </div>
 
-<div class="modal fade bme" id="mg_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="mg_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content bme">
+    <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">회원가입</h5>
+        <h5 class="modal-title bme" id="exampleModalLabel">회원가입</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form>
           <input type="hidden" id="mg_modal_seq">
-          <div class="mb-3">
+          <div class="mb-3 bme">
             <label for="user_id" class="col-form-label">아이디:</label>
             <input type="text" class="form-control" id="user_id">
           </div>
+          <div class="mb-3 bme">
+            <label for="user_name" class="col-form-label">별명:</label>
+            <input type="text" class="form-control" id="user_name">
+          </div>
           <div class="mb-3">
-            <label for="password" class="col-form-label">비밀번호:</label>
-            <input type="password" class="form-control" id="password">
+            <label for="user_password" class="col-form-label">비밀번호:</label>
+            <input type="password" class="form-control" id="user_password">
           </div>
         </form>
       </div>
@@ -85,8 +88,36 @@
   </div>
 </div>
 <script>
-  async function doSave() {
+  async function post(url, data, header) {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...header
+      },
+      body: JSON.stringify(data),
+    });
 
+    return await response.json();
+  }
+
+  async function get(url) {
+    const response = await fetch(url);
+    return await response.json();
+  }
+  async function doSave() {
+    var obj = {};
+    obj.user_id = $("#user_id").val();
+    obj.user_pw = $("#user_password").val();
+    obj.user_name = $("#user_name").val();
+    const response = await post("../custom_join",obj);
+
+    if (!response.result) {
+      alert("회원가입 실패 하였습니다");
+    } else {
+      alert("가입성공! 로그인 해주세요");
+      $("#mg_close").click();
+    }
   }
 </script>
 </body>

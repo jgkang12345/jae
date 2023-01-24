@@ -86,9 +86,7 @@
                             <div class="mb-3">
                                 <label for="item_id" class="form-label bme">계정과목</label>
                                 <select  class="reg form-control bme" id="item_id">
-                                    <option class="bme" value="snacks_fee">간식비</option>
-                                    <option class="bme" value="tr_fee">교통비</option>
-                                    <option class="bme" value="eat_fee">식대</option>
+
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -140,10 +138,7 @@
                         </div>
                         <div class="row" style="background: #fff; height: 60px;">
                             <div class="col-6">
-                                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                                    <button type="button" style="width: 110px;" class="btn btn-outline-primary">엑셀 다운로드</button>
-                                    <button type="button" style="width: 110px;" class="btn btn-outline-primary">엑셀 업로드</button>
-                                </div>
+                                <button type="button" style="width: 100%" onclick="mg_excelDownload()" class="btn btn-outline-primary">엑셀 다운로드</button>
                             </div>
                             <div class="col-lg-6 col-xl-6 col-sm-12">
                                 <button type="button" class="btn btn-outline-success" style="width: 100%" onclick="m_doSearch()">검 색</button>
@@ -206,7 +201,9 @@
                             </div>
                             <div class="mb-3">
                                 <label for="mg_modal_item_id" class="col-form-label">계정과목:</label>
-                                <input type="text" class="form-control" id="mg_modal_item_id">
+                                <select class="form-control" id="mg_modal_item_id">
+
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="mg_modal_amount" class="col-form-label">금액:</label>
@@ -227,7 +224,7 @@
             </div>
         </div>
         <!--설정 TAB-->
-        <div id="setting_screen">
+        <div id="setting_screen" style="background: #dbdbdb">
             <div class="container">
                 <div class="card bme">
                     <div class="card-header bme">
@@ -326,7 +323,7 @@
             </div>
         </div>
         <!-- dashboard TAB -->
-        <div id="dashboard_screen">
+        <div id="dashboard_screen" style="background: #dbdbdb">
             <div class="container">
                 <div class="card bme">
                     <div class="card-header bme">
@@ -358,7 +355,7 @@
                             </div>
                             <div class="row" style="height: 100px; background: #fff">
                                 <div class="col-12">
-                                    <button type="button" class="btn btn-outline-success" style="width: 100%" onclick="s_doSearch()">검 색</button>
+                                    <button type="button" class="btn btn-outline-success" style="width: 100%" onclick="ds_getChartData()">검 색</button>
                                 </div>
                             </div>
                             <div style="height: 300px;">
@@ -368,16 +365,8 @@
                         <div id="tableTab">
                             <div class="row" style="height: 100px; background: #fff; padding-top: 10px;">
                                 <div class="col-6">
-                                    <label>계정과목</label>
-                                    <select id="ds_tab2_item_id" class="ds form-control">
-                                        <option>해당없음</option>
-                                        <option value="I">수입</option>
-                                        <option value="O">지출</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
                                     <label>월</label>
-                                    <input id="ds_tab2_month" class="ds form-control" type="month">
+                                    <input id="ds_tab2_month" onchange="ds_getAlldata()" class="ds form-control" type="month">
                                 </div>
                             </div>
                             <div class="row" style="background: #fff; padding-top: 22px;">
@@ -399,7 +388,7 @@
                                             </thead>
                                         </table>
                                     </div>
-                                    <div style="height: 400px;overflow-y: auto;">
+                                    <div style="height: 300px;overflow-y: auto;">
                                         <table class="table table-hover"  style="text-align: center;">
                                             <colgroup>
                                                 <col width="25%">
@@ -410,6 +399,24 @@
                                             <tbody id="ds_i_table">
 
                                             </tbody>
+                                        </table>
+                                    </div>
+                                    <div>
+                                        <table class="table table-hover"  style="text-align: center;">
+                                            <colgroup>
+                                                <col width="25%">
+                                                <col width="25%">
+                                                <col width="25%">
+                                                <col width="25%">
+                                            </colgroup>
+                                            <tfoot>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>합계</td>
+                                                    <td id="i_sum"></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -431,7 +438,7 @@
                                             </thead>
                                         </table>
                                     </div>
-                                    <div style="height: 400px;overflow-y: auto;">
+                                    <div style="height: 300px;overflow-y: auto;">
                                         <table class="table table-hover"  style="text-align: center;">
                                             <colgroup>
                                                 <col width="25%">
@@ -442,6 +449,24 @@
                                             <tbody id="ds_o_table">
 
                                             </tbody>
+                                        </table>
+                                    </div>
+                                    <div>
+                                        <table class="table table-hover"  style="text-align: center;">
+                                            <colgroup>
+                                                <col width="25%">
+                                                <col width="25%">
+                                                <col width="25%">
+                                                <col width="25%">
+                                            </colgroup>
+                                            <tfoot>
+                                            <tr>
+                                                <td></td>
+                                                <td>합계</td>
+                                                <td id="o_sum"></td>
+                                                <td></td>
+                                            </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>

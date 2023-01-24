@@ -10,15 +10,25 @@
                 ,user_name
                 ,reg_dt
                 ,reg_id
-            ),
+            )
             values
             (
                 #{user_id}
                ,#{user_pw}
-               ,#{user_id}
+               ,#{user_name}
                ,now()
                ,#{user_id}
             );
+        insert into d_no
+            (
+                user_id
+                ,item_no
+            )
+            values
+                (
+                    #{user_id}
+                    ,0
+                )
     </insert>
 
     <select id="findByMemberId" parameterType="String" resultType="kang.jae.goo.config.dto.Member">

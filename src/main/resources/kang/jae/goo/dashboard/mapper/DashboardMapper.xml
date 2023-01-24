@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kang.jae.goo.dashboard.mapper.DashboardMapper">
+
+    <select id="ds_getChartData" parameterType="hashmap" resultType="hashmap">
+        select
+            sum(amount) as amount
+             ,DAY(transaction_ok_date) as ok_date
+        from d_transaction_slip
+        where
+            1=1
+          and left(transaction_ok_date,7) = #{month}
+          and user_id = #{user_id}
+          and item_id = #{item_id}
+        group by TRANSACTION_OK_DATE;
+    </select>
+
+    <select id="ds_getAlldata" parameterType="hashmap" resultType="hashmap">
+        with item as
+                 (
+                     select
+                         seq as seq
+                          ,trade_cd as trade_cd
+                          ,title as title
+                          ,item_id as item_id
+                     from b_variation_items
+                     where
+                         1=1
+                       and user_id = #{user_id}
+                     union all
+                     select
+                         seq as seq
+                          ,trade_cd as trade_cd
+                          ,title as title
+                          ,item_id as item_id
+                     from b_fixed_items
+                 )
+        select
+            max(main.title) as title
+             ,sum(main.amount) as amount
+             ,max(sub.trade_cd) as trade_cd
+        from d_transaction_slip main
+                 left outer join item sub
+                                 on main.ITEM_ID = sub.item_id
+        where 1=1
+          and left(main.TRANSACTION_OK_DATE,7) = #{month}
+          and user_id = #{user_id}
+        group by main.item_id;
+    </select>
+</mapper>

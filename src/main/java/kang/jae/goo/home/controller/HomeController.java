@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class HomeController {
@@ -30,12 +31,22 @@ public class HomeController {
         return mv;
     }
 
-    @PostMapping("/join")
-    public String join(Member member) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        member.setUser_pw(passwordEncoder.encode(member.getUser_pw()));
-        memberMapper.save(member);
-        return "redirect:/";
-    }
+    @PostMapping("/custom_join")
+    @ResponseBody
+    public Map<String, Object> join(@RequestBody Member member) {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            member.setUser_pw(passwordEncoder.encode(member.getUser_pw()));
+            memberMapper.save(member);
 
+            result.put("result" , true);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            result.put("result", false);
+            result.put("message", e.getMessage());
+        }
+        return result;
+    }
 }

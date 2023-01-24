@@ -9,19 +9,21 @@
              , ITEM_ID
              , AMOUNT
              , TRANSACTION_OK_DATE
+             , TITLE
              , COMMENT
              , REG_DT
              , REG_ID
              )
         VALUES
             (
-             'jgkang'
+             #{user_id}
             ,#{item_id}
             ,#{amount}
             ,#{transaction_ok_date}
+            ,#{title}
             ,#{comment}
             ,NOW()
-            ,'jgkang'
+            ,#{user_id}
             )
     </insert>
 

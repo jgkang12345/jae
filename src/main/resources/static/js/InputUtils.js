@@ -26,3 +26,16 @@ function fixGbRender(gb) {
     else
         return "변동항목";
 }
+
+async function selectItemSetting() {
+    return await get("../management/selectItemSetting");
+}
+
+function tradeCdRender(cd) {
+    if (cd === "I") {
+        return "table-primary";
+    }
+    else {
+        return "table-danger";
+    }
+}

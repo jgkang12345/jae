@@ -13,4 +13,6 @@ public interface ManagementMapper {
     void deleteItem(Map<String, Object> map);
 
     void updateItem(Map<String, Object> map);
+
+    List<Map<String, Object>> selectItemSetting(Map<String, Object> map);
 }

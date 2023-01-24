@@ -1,5 +1,6 @@
 package kang.jae.goo.register.service;
 
+import kang.jae.goo.config.utils.SecurityUtils;
 import kang.jae.goo.register.mapper.RegisterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class RegisterService {
     public Map<String, Object> registerSave(Map<String, Object> map) {
         Map<String, Object> result = new HashMap<>();
         try {
+            map.put("user_id", SecurityUtils.CurrentUserName());
             registerMapper.InsertItem(map);
             result.put("result", true);
         }
